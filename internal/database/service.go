@@ -1,0 +1,59 @@
+package database
+
+import (
+	"context"
+	"github.com/jmoiron/sqlx"
+)
+
+type Service struct {
+	client *client
+}
+
+func (s Service) Insert(ctx context.Context, title, authorFirstname, authorLastname string) error {
+	err := s.client.insert(ctx, Book{Title: title}, Author{Firstname: authorFirstname, Lastname: authorLastname})
+	return err
+}
+
+// New функция инициальзирует объект , работающий с бд (вид функций -creator)
+func New(db *sqlx.DB) *Service {
+	return &Service{
+		client: &client{
+			db: db,
+		},
+	}
+}
+
+// получение всех книг
+func (s Service) SelectBooks(ctx context.Context) ([]BookAuthor, error) {
+	books, err := s.client.GetBooks(ctx)
+	return books, err
+}
+
+// получение одной книги по айди
+func (s Service) SelectBook(ctx context.Context, id int64) (*BookAuthor, error) {
+	book, err := s.client.GetBook(ctx, id)
+	return book, err
+}
+
+// получение одного автора по айди
+func (s Service) SelectAuthor(ctx context.Context, id int64) (*Author, error) {
+	author, err := s.client.GetAuthor(ctx, id)
+	return author, err
+}
+
+// удаление одной книги
+func (s Service) DeleteBook(ctx context.Context, id int64) error {
+	err := s.client.DelBook(ctx, id)
+	return err
+}
+
+// update one book
+func (s Service) UpdateBook(ctx context.Context, title string, id int64, firstname, lastname string) error {
+	err := s.client.UpdateBook(ctx, title, id, firstname, lastname)
+	return err
+}
+
+//func (S Service) SelectAll(ctx context.Context, title, authorFirstname, authorLastname string) error {
+//	err := S.client.selectAll(ctx, Book{Title: title}, Author{Firstname: authorFirstname, Lastname: authorLastname})
+//	return err
+//}
