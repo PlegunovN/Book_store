@@ -20,7 +20,10 @@ func ServerStart(storage *database.Service) {
 	r.HandleFunc("/book/{id}", api.GetBook).Methods("GET")
 	r.HandleFunc("/author/{id}", api.GetAuthor).Methods("Get")
 	r.HandleFunc("/book", api.CreateBook).Methods("POST")
-	r.HandleFunc("/update/book", api.UpdateBook).Methods("PUT")
+	r.HandleFunc("/update/bookauthor", api.UpdateBook).Methods("PUT")
+	r.HandleFunc("/update/book", api.UpBook).Methods("PUT")
+	r.HandleFunc("/update/author", api.UpAuthor).Methods("PUT")
+
 	r.HandleFunc("/book/{id}", api.DeleteBook).Methods("DELETE")
 	err := http.ListenAndServe(":8080", r)
 	log.Fatal(err)

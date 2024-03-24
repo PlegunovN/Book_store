@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -25,26 +26,61 @@ func (s client) insert(ctx context.Context, book Book, author Author) error {
 		return err
 	}
 
-	query = "INSERT INTO book(title, author) VALUES($1,$2) "
+	query = "INSERT INTO book(title, author) VALUES($1,$2)"
 	_, err = s.db.ExecContext(ctx, query, book.Title, a.ID)
 	return err
 }
 
 func (s client) UpdateBook(ctx context.Context, title string, id int64, firstname, lastname string) error {
-	//query := "UPDATE book SET title = $1 WHERE id = $2"
-	query := "BEGIN;" +
-		"UPDATE book SET title = $1 WHERE book.id = $2;" +
-		"UPDATE author SET firstname = $3, lastname = $4 WHERE author.id = book.author;" +
-		"COMMIT;"
-	_, err := s.db.ExecContext(ctx, query, title, id, firstname, lastname)
-	return err
+
+	tx, err := s.db.BeginTxx(ctx, nil)
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+			fmt.Println("update error - rollback ")
+			return
+		}
+		tx.Commit()
+	}()
+	//Сделать отдельно обновление книга и автора
+	//либо
+	//добавить условия обновления
+	_, err = tx.ExecContext(ctx, "UPDATE book SET title = $1 WHERE book.id = $2", title, id)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.ExecContext(ctx, "UPDATE author SET firstname = $3, lastname = $4 WHERE author.id = book.author", firstname, lastname)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s client) UpBook(ctx context.Context, title string, id int64) error {
+	query := "UPDATE book SET title = $1 WHERE id = $2"
+	_, err := s.db.ExecContext(ctx, query, title, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s client) UpAuthor(ctx context.Context, firstname, lastname string, id int64) error {
+	query := "UPDATE author SET firstname = $1, lastname = $2 WHERE id = $3"
+	_, err := s.db.ExecContext(ctx, query, firstname, lastname, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // 29,02
-func (s client) GetBooks(ctx context.Context) ([]BookAuthor, error) {
-	query := "SELECT book.id, title, book.author, firstname, lastname  FROM book INNER JOIN author ON book.author = author.id  ORDER BY id LIMIT 3 OFFSET 2 "
+func (s client) GetBooks(ctx context.Context, limit, offset string) ([]BookAuthor, error) {
+	query := "SELECT book.id, title, book.author, firstname, lastname  FROM book INNER JOIN author ON book.author = author.id  ORDER BY id LIMIT $1 OFFSET $2"
 	books := make([]BookAuthor, 1)
-	err := s.db.SelectContext(ctx, &books, query)
+	err := s.db.SelectContext(ctx, &books, query, limit, offset)
 	if err != nil {
 		return nil, err
 	}

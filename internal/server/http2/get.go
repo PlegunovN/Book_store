@@ -9,17 +9,13 @@ import (
 	"strconv"
 )
 
-type BookResponce struct {
-	ID     int64   `json:"id"`
-	Title  string  `json:"title"`
-	Author *Author `json:"author"`
-}
-
 // 29.02
 func (a Api) GetBooks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	limit := r.URL.Query().Get("limit")
+	offset := r.URL.Query().Get("offset")
 	ctx := context.TODO()
-	books, err := a.Storage.SelectBooks(ctx)
+	books, err := a.Storage.SelectBooks(ctx, limit, offset)
 	err = json.NewEncoder(w).Encode(books)
 	if err != nil {
 		fmt.Println("error Encode books in get.go")

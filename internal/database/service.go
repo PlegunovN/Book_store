@@ -9,11 +9,6 @@ type Service struct {
 	client *client
 }
 
-func (s Service) Insert(ctx context.Context, title, authorFirstname, authorLastname string) error {
-	err := s.client.insert(ctx, Book{Title: title}, Author{Firstname: authorFirstname, Lastname: authorLastname})
-	return err
-}
-
 // New функция инициальзирует объект , работающий с бд (вид функций -creator)
 func New(db *sqlx.DB) *Service {
 	return &Service{
@@ -23,9 +18,14 @@ func New(db *sqlx.DB) *Service {
 	}
 }
 
+func (s Service) Insert(ctx context.Context, title, authorFirstname, authorLastname string) error {
+	err := s.client.insert(ctx, Book{Title: title}, Author{Firstname: authorFirstname, Lastname: authorLastname})
+	return err
+}
+
 // получение всех книг
-func (s Service) SelectBooks(ctx context.Context) ([]BookAuthor, error) {
-	books, err := s.client.GetBooks(ctx)
+func (s Service) SelectBooks(ctx context.Context, limit, offset string) ([]BookAuthor, error) {
+	books, err := s.client.GetBooks(ctx, limit, offset)
 	return books, err
 }
 
@@ -47,9 +47,21 @@ func (s Service) DeleteBook(ctx context.Context, id int64) error {
 	return err
 }
 
-// update one book
+// update one book and authors
 func (s Service) UpdateBook(ctx context.Context, title string, id int64, firstname, lastname string) error {
 	err := s.client.UpdateBook(ctx, title, id, firstname, lastname)
+	return err
+}
+
+// update one book
+func (s Service) UpBook(ctx context.Context, title string, id int64) error {
+	err := s.client.UpBook(ctx, title, id)
+	return err
+}
+
+// update one author
+func (s Service) UpAuthor(ctx context.Context, firstname, lastname string, id int64) error {
+	err := s.client.UpAuthor(ctx, firstname, lastname, id)
 	return err
 }
 

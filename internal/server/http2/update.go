@@ -14,6 +14,40 @@ type UpdateB struct {
 	Lastname  string `json:"lastname" db:"lastname"`
 }
 
+type UBook struct {
+	ID    int64  `json:"id"`
+	Title string `json:"title"`
+}
+
+type UAuthor struct {
+	ID        int64  `json:"id" db:"id"`
+	Firstname string `json:"firstname" db:"firstname"`
+	Lastname  string `json:"lastname" db:"lastname"`
+}
+
+// 23,03
+func (a Api) UpBook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := context.TODO()
+	req := new(UBook)
+	_ = json.NewDecoder(r.Body).Decode(&req)
+	err := a.Storage.UpBook(ctx, req.Title, req.ID)
+	if err != nil {
+		fmt.Println(" error encode update one book in update.go")
+	}
+}
+
+func (a Api) UpAuthor(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	ctx := context.TODO()
+	req := new(UAuthor)
+	_ = json.NewDecoder(r.Body).Decode(&req)
+	err := a.Storage.UpAuthor(ctx, req.Firstname, req.Lastname, req.ID)
+	if err != nil {
+		fmt.Println(" error encode update one book in update.go")
+	}
+}
+
 // 05,03
 func (a Api) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -28,7 +62,7 @@ func (a Api) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	//id := int64(idB)
 	err := a.Storage.UpdateBook(ctx, req.Title, req.ID, req.Firstname, req.Lastname)
 	if err != nil {
-		fmt.Println("error Encode book in update.go")
+		fmt.Println("error Encode bookAuthor in update.go")
 	}
 }
 
