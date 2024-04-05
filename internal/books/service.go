@@ -1,4 +1,4 @@
-package database
+package books
 
 import (
 	"context"

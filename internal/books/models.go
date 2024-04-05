@@ -1,4 +1,4 @@
-package database
+package books
 
 type Book struct {
 	ID       int64  `json:"id" db:"id"`

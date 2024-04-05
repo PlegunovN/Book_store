@@ -1,17 +1,17 @@
 package http2
 
 import (
-	"Book_store/internal/database"
+	"Book_store/internal/books"
 	"github.com/jmoiron/sqlx"
 )
 
 type Api struct {
-	Storage *database.Service
+	Storage *books.Service
 }
 
 func New(db *sqlx.DB) *Api {
 	return &Api{
-		Storage: database.New(db),
+		Storage: books.New(db),
 	}
 }
 

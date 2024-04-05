@@ -1,7 +1,7 @@
 package server
 
 import (
-	"Book_store/internal/database"
+	"Book_store/internal/books"
 	"Book_store/internal/server/http2"
 	"fmt"
 	"log"
@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func ServerStart(storage *database.Service) {
+func ServerStart(storage *books.Service) {
 
 	api := http2.Api{Storage: storage}
 

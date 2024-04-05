@@ -1,4 +1,4 @@
-package database
+package books
 
 import (
 	"context"
@@ -196,7 +196,7 @@ func (s client) DelBook(ctx context.Context, id int64) error {
 //}
 
 //func Add(db *db)
-//db.SetBook("1", "Война и Мир", &database.Author{Firstname: "Лев", Lastname: "Толстой"})
-//db.SetBook("2", "Преступление и наказание", &database.Author{Firstname: "Фёдор", Lastname: "Достоевский"})
+//db.SetBook("1", "Война и Мир", &books.Author{Firstname: "Лев", Lastname: "Толстой"})
+//db.SetBook("2", "Преступление и наказание", &books.Author{Firstname: "Фёдор", Lastname: "Достоевский"})
 //}
 //
