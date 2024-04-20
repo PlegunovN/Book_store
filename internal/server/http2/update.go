@@ -49,17 +49,13 @@ func (a Api) UpAuthor(w http.ResponseWriter, r *http.Request) {
 }
 
 // 05,03
+
 func (a Api) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	ctx := context.TODO()
 
 	req := new(UpdateB)
 	_ = json.NewDecoder(r.Body).Decode(&req)
-	//idB, err := strconv.Atoi(mux.Vars(r)["id"])
-	//if err != nil {
-	//	fmt.Println("error mux.Vars book in update.go")
-	//}
-	//id := int64(idB)
 	err := a.Storage.UpdateBook(ctx, req.Title, req.ID, req.Firstname, req.Lastname)
 	if err != nil {
 		fmt.Println("error Encode bookAuthor in update.go")

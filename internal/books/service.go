@@ -48,6 +48,7 @@ func (s Service) DeleteBook(ctx context.Context, id int64) error {
 }
 
 // update one book and authors
+
 func (s Service) UpdateBook(ctx context.Context, title string, id int64, firstname, lastname string) error {
 	err := s.client.UpdateBook(ctx, title, id, firstname, lastname)
 	return err

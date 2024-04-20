@@ -20,7 +20,7 @@ func ServerStart(storage *books.Service) {
 	r.HandleFunc("/book/{id}", api.GetBook).Methods("GET")
 	r.HandleFunc("/author/{id}", api.GetAuthor).Methods("Get")
 	r.HandleFunc("/book", api.CreateBook).Methods("POST")
-	r.HandleFunc("/update/bookauthor", api.UpdateBook).Methods("PUT")
+	r.HandleFunc("/update/book_author", api.UpdateBook).Methods("PUT")
 	r.HandleFunc("/update/book", api.UpBook).Methods("PUT")
 	r.HandleFunc("/update/author", api.UpAuthor).Methods("PUT")
 
