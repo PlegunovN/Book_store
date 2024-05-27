@@ -2,7 +2,7 @@ package server
 
 import (
 	"Book_store/internal/books"
-	"Book_store/internal/server/http2"
+	"Book_store/internal/server/handlers"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 
 func ServerStart(storage *books.Service) {
 
-	api := http2.Api{Storage: storage}
+	api := handlers.Api{Storage: storage}
 
 	r := mux.NewRouter()
 	fmt.Println("server start at 8080")
@@ -20,10 +20,9 @@ func ServerStart(storage *books.Service) {
 	r.HandleFunc("/book/{id}", api.GetBook).Methods("GET")
 	r.HandleFunc("/author/{id}", api.GetAuthor).Methods("Get")
 	r.HandleFunc("/book", api.CreateBook).Methods("POST")
-	r.HandleFunc("/update/book_author", api.UpdateBook).Methods("PUT")
-	r.HandleFunc("/update/book", api.UpBook).Methods("PUT")
-	r.HandleFunc("/update/author", api.UpAuthor).Methods("PUT")
-
+	r.HandleFunc("/update/book_author", api.UpdateBookandAuthor).Methods("PUT")
+	r.HandleFunc("/update/book", api.UpdateBook).Methods("PUT")
+	r.HandleFunc("/update/author", api.UpdateAuthor).Methods("PUT")
 	r.HandleFunc("/book/{id}", api.DeleteBook).Methods("DELETE")
 	err := http.ListenAndServe(":8080", r)
 	log.Fatal(err)

@@ -1,4 +1,4 @@
-package http2
+package handlers
 
 import (
 	"Book_store/internal/books"
@@ -14,11 +14,3 @@ func New(db *sqlx.DB) *Api {
 		Storage: books.New(db),
 	}
 }
-
-//func New(db *sqlx.DB) *Service {
-//	return &Service{
-//		client: &client{
-//			db: db,
-//		},
-//	}
-//}

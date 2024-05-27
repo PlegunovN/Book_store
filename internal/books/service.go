@@ -18,6 +18,7 @@ func New(db *sqlx.DB) *Service {
 	}
 }
 
+// создание новой книги
 func (s Service) Insert(ctx context.Context, title, authorFirstname, authorLastname string) error {
 	err := s.client.insert(ctx, Book{Title: title}, Author{Firstname: authorFirstname, Lastname: authorLastname})
 	return err
@@ -43,30 +44,24 @@ func (s Service) SelectAuthor(ctx context.Context, id int64) (*Author, error) {
 
 // удаление одной книги
 func (s Service) DeleteBook(ctx context.Context, id int64) error {
-	err := s.client.DelBook(ctx, id)
+	err := s.client.DeleteBook(ctx, id)
 	return err
 }
 
 // update one book and authors
-
-func (s Service) UpdateBook(ctx context.Context, title string, id int64, firstname, lastname string) error {
-	err := s.client.UpdateBook(ctx, title, id, firstname, lastname)
+func (s Service) UpdateBookAndAuthor(ctx context.Context, title string, id int64, firstname, lastname string) error {
+	err := s.client.UpdateBookAndAuthor(ctx, title, id, firstname, lastname)
 	return err
 }
 
 // update one book
-func (s Service) UpBook(ctx context.Context, title string, id int64) error {
-	err := s.client.UpBook(ctx, title, id)
+func (s Service) UpdateBook(ctx context.Context, title string, id int64) error {
+	err := s.client.UpdateBook(ctx, title, id)
 	return err
 }
 
 // update one author
-func (s Service) UpAuthor(ctx context.Context, firstname, lastname string, id int64) error {
-	err := s.client.UpAuthor(ctx, firstname, lastname, id)
+func (s Service) UpdateAuthor(ctx context.Context, firstname, lastname string, id int64) error {
+	err := s.client.UpdateAuthor(ctx, firstname, lastname, id)
 	return err
 }
-
-//func (S Service) SelectAll(ctx context.Context, title, authorFirstname, authorLastname string) error {
-//	err := S.client.selectAll(ctx, Book{Title: title}, Author{Firstname: authorFirstname, Lastname: authorLastname})
-//	return err
-//}
