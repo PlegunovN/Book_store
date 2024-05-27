@@ -30,19 +30,19 @@ func (a Api) CreateBook(w http.ResponseWriter, r *http.Request) {
 
 	if req.Title == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not Title")
+		log.Println("error, not BookTitle in request")
 		return
 	}
 
 	if req.Author.Firstname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not Fist name")
+		log.Println("error, not Fist name in request")
 		return
 	}
 
 	if req.Author.Lastname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not Last name")
+		log.Println("error, not Last name in request")
 		return
 	}
 
@@ -52,5 +52,6 @@ func (a Api) CreateBook(w http.ResponseWriter, r *http.Request) {
 		log.Println("err in create.go")
 		return
 	}
+
 	w.WriteHeader(http.StatusCreated)
 }

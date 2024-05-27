@@ -20,7 +20,7 @@ func New(db *sqlx.DB) *Service {
 
 // создание новой книги
 func (s Service) Insert(ctx context.Context, title, authorFirstname, authorLastname string) error {
-	err := s.client.insert(ctx, Book{BookTitle: title}, Author{AuthorFirstname: authorFirstname, AuthorLastname: authorLastname})
+	err := s.client.insert(ctx, Book{Title: title}, Author{Firstname: authorFirstname, Lastname: authorLastname})
 	return err
 }
 

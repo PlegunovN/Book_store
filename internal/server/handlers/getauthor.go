@@ -19,16 +19,21 @@ func (a Api) GetAuthor(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	id := int64(idStr)
 
-	author, err := a.Storage.SelectAuthor(ctx, id)
-	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		log.Println("error Not Found")
+	if id == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("error, not ID in request")
 		return
 	}
 
-	if id == 0 {
-		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not ID")
+	author, err := a.Storage.SelectAuthor(ctx, id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println("error select author")
+		return
+	}
+	if author == nil {
+		w.WriteHeader(http.StatusNotFound)
+		log.Println("error, Author Not Found")
 		return
 	}
 

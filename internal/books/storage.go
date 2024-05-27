@@ -21,24 +21,24 @@ func (s client) insert(ctx context.Context, book Book, author Author) error {
 	}()
 
 	query := "INSERT INTO author(firstname, lastname) VALUES ($1, $2)"
-	_, err = tx.ExecContext(ctx, query, author.AuthorFirstname, author.AuthorLastname)
+	_, err = tx.ExecContext(ctx, query, author.Firstname, author.Lastname)
 	if err != nil {
 		return err
 	}
 
 	query = "INSERT INTO book(title) VALUES($1)"
-	_, err = tx.ExecContext(ctx, query, book.BookTitle)
+	_, err = tx.ExecContext(ctx, query, book.Title)
 
 	query = "SELECT id FROM author where  firstname = $1 AND lastname = $2"
 	a := new(Author)
-	err = tx.GetContext(ctx, a, query, author.AuthorFirstname, author.AuthorLastname)
+	err = tx.GetContext(ctx, a, query, author.Firstname, author.Lastname)
 	if err != nil {
 		return err
 	}
 
 	query = "SELECT id FROM book WHERE title = $1"
 	b := new(Book)
-	err = tx.GetContext(ctx, b, query, book.BookTitle)
+	err = tx.GetContext(ctx, b, query, book.Title)
 	if err != nil {
 		return err
 	}
@@ -101,9 +101,10 @@ func (s client) UpdateAuthor(ctx context.Context, firstname, lastname string, id
 }
 
 func (s client) GetBooks(ctx context.Context, limit, offset string) ([]BookAuthor, error) {
-	query := "SELECT book.id, book.title, author.id , author.firstname, author.lastname " +
-		"FROM book INNER JOIN bookAuthor ON book.id = bookAuthor.book_id " +
-		"INNER JOIN author ON bookAuthor.author_id = author.id  ORDER BY book.id LIMIT $1 OFFSET $2"
+	query := `"SELECT book.id, book.title, author.id , author.firstname, author.lastname 
+		FROM book INNER JOIN bookAuthor ON book.id = bookAuthor.book_id 
+		INNER JOIN author ON bookAuthor.author_id = author.id  ORDER BY book.id LIMIT $1 OFFSET $2"`
+
 	books := make([]BookAuthor, 1)
 	err := s.db.SelectContext(ctx, &books, query, limit, offset)
 	if err != nil {
@@ -113,9 +114,9 @@ func (s client) GetBooks(ctx context.Context, limit, offset string) ([]BookAutho
 }
 
 func (s client) GetBook(ctx context.Context, id int64) (*BookAuthor, error) {
-	query := "SELECT book.id, book.title , author.id, author.firstname, author.lastname " +
-		"FROM book INNER JOIN bookAuthor ON book.id = bookAuthor.book_id " +
-		"INNER JOIN author ON bookAuthor.author_id = author.id where book.id=$1"
+	query := `"SELECT book.id, book.title , author.id, author.firstname, author.lastname
+		FROM book INNER JOIN bookAuthor ON book.id = bookAuthor.book_id 
+		INNER JOIN author ON bookAuthor.author_id = author.id where book.id=$1"`
 	res := &BookAuthor{}
 	err := s.db.GetContext(ctx, res, query, id)
 	if err != nil {

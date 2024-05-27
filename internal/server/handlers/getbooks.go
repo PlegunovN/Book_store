@@ -13,21 +13,27 @@ func (a Api) GetBooks(w http.ResponseWriter, r *http.Request) {
 	limit := r.URL.Query().Get("limit")
 	if limit == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not ID")
+		log.Println("error, not limit in request")
 		return
 	}
 
 	offset := r.URL.Query().Get("offset")
 	if offset == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not ID")
+		log.Println("error, not offset in request")
 		return
 	}
 
 	books, err := a.Storage.SelectBooks(ctx, limit, offset)
 	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println("error select books")
+		return
+	}
+
+	if books == nil {
 		w.WriteHeader(http.StatusNotFound)
-		log.Println("error Not Found")
+		log.Println("error, books Not Found")
 		return
 	}
 
