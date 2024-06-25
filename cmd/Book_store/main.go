@@ -12,6 +12,13 @@ import (
 // логер
 
 func main() {
+
+	//Logger, err := zap.NewProduction()
+	//if err != nil {
+	//	fmt.Print("bu", err)
+	//}
+	//defer Logger.Sync()
+
 	//config
 	db, err := sqlx.Connect("postgres", "host=localhost port=5432 user=postgres password=1234 dbname=test_books sslmode=disable")
 	if err != nil {

@@ -13,7 +13,7 @@ func (a Api) GetBooks(w http.ResponseWriter, r *http.Request) {
 	limit := r.URL.Query().Get("limit")
 	if limit == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not limit in request")
+		log.Println("400", "error, not limit in request")
 		return
 	}
 
