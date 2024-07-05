@@ -1,8 +1,8 @@
 package handlers
 
 import (
+	"Book_store/internal"
 	"github.com/gorilla/mux"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -12,7 +12,7 @@ func (a Api) DeleteBook(w http.ResponseWriter, r *http.Request) {
 
 	idB, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
-		log.Println("error mux.Vars book in delete.go")
+		internal.SugarLogger.Info("error mux.Vars book in delete.go")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -22,13 +22,13 @@ func (a Api) DeleteBook(w http.ResponseWriter, r *http.Request) {
 
 	if id == 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not ID in request")
+		internal.SugarLogger.Info("error, not ID in request")
 		return
 	}
 
 	err = a.Storage.DeleteBook(ctx, id)
 	if err != nil {
-		log.Println("error Encode id in delete.go")
+		internal.SugarLogger.Info("error Encode id in delete.go")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

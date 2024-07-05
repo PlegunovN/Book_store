@@ -1,8 +1,8 @@
 package handlers
 
 import (
+	"Book_store/internal"
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -24,32 +24,32 @@ func (a Api) CreateBook(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("error in decoder, create.go")
+		internal.SugarLogger.Info("error in decoder, create.go")
 		return
 	}
 
 	if req.Title == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not BookTitle in request")
+		internal.SugarLogger.Info("error, not BookTitle in request")
 		return
 	}
 
 	if req.Author.Firstname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not Fist name in request")
+		internal.SugarLogger.Info("error, not Fist name in request")
 		return
 	}
 
 	if req.Author.Lastname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not Last name in request")
+		internal.SugarLogger.Info("error, not Last name in request")
 		return
 	}
 
 	err = a.Storage.Insert(ctx, req.Title, req.Author.Firstname, req.Author.Lastname)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("err in create.go")
+		internal.SugarLogger.Info("err in create.go")
 		return
 	}
 

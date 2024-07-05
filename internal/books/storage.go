@@ -1,9 +1,9 @@
 package books
 
 import (
+	"Book_store/internal"
 	"context"
 	"github.com/jmoiron/sqlx"
-	"log"
 )
 
 type client struct {
@@ -15,7 +15,7 @@ func (s client) insert(ctx context.Context, book Book, author Author) error {
 	defer func() {
 		if err != nil {
 			tx.Rollback()
-			log.Println("Create error - rollback")
+			internal.SugarLogger.Info("Create error - rollback")
 		}
 		tx.Commit()
 	}()
@@ -55,7 +55,7 @@ func (s client) UpdateBookAndAuthor(ctx context.Context, title string, id int64,
 	defer func() {
 		if err != nil {
 			tx.Rollback()
-			log.Println("update error - rollback ")
+			internal.SugarLogger.Info("update error - rollback ")
 			return
 		}
 		tx.Commit()
@@ -140,7 +140,7 @@ func (s client) DeleteBook(ctx context.Context, id int64) error {
 	defer func() {
 		if err != nil {
 			tx.Rollback()
-			log.Println("Delete error - rollback")
+			internal.SugarLogger.Info("Delete error - rollback")
 		}
 		tx.Commit()
 	}()
