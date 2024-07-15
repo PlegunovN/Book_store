@@ -1,4 +1,4 @@
-module Book_store
+module github.com/PlegunovN/Book_store
 
 go 1.21.1
 

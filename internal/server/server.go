@@ -1,10 +1,10 @@
 package server
 
 import (
-	"Book_store/internal/books"
-	"Book_store/internal/logger"
-	"Book_store/internal/server/handlers"
 	"fmt"
+	"github.com/PlegunovN/Book_store/internal/books"
+	"github.com/PlegunovN/Book_store/internal/logger"
+	"github.com/PlegunovN/Book_store/internal/server/handlers"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"

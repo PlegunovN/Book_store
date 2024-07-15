@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"Book_store/internal/logger"
+	"github.com/PlegunovN/Book_store/internal/logger"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"

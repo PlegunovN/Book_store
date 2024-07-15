@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"Book_store/internal/books"
+	"github.com/PlegunovN/Book_store/internal/books"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )

@@ -1,8 +1,8 @@
 package books
 
 import (
-	"Book_store/internal/logger"
 	"context"
+	"github.com/PlegunovN/Book_store/internal/logger"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )

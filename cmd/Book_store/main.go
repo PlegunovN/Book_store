@@ -1,10 +1,10 @@
 package main
 
 import (
-	"Book_store/internal/books"
-	"Book_store/internal/logger"
-	"Book_store/internal/server"
 	"fmt"
+	"github.com/PlegunovN/Book_store/internal/books"
+	"github.com/PlegunovN/Book_store/internal/logger"
+	"github.com/PlegunovN/Book_store/internal/server"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )

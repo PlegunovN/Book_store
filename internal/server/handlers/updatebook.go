@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"Book_store/internal/logger"
 	"context"
 	"encoding/json"
+	"github.com/PlegunovN/Book_store/internal/logger"
 	"net/http"
 )
 
