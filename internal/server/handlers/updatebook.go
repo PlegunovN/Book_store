@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"github.com/PlegunovN/Book_store/internal/logger"
 	"net/http"
 )
 
@@ -19,26 +18,26 @@ func (a Api) UpdateBook(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		logger.SugarLogger.Info("error decode update one book in updatebook.go")
+		a.SLogger.Info("error decode update one book in updatebook.go")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	if req.ID == 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		logger.SugarLogger.Info("error, not id in request")
+		a.SLogger.Info("error, not id in request")
 		return
 	}
 
 	if req.Title == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		logger.SugarLogger.Info("error, not title in request")
+		a.SLogger.Info("error, not title in request")
 		return
 	}
 
 	err = a.Storage.UpdateBook(ctx, req.Title, req.ID)
 	if err != nil {
-		logger.SugarLogger.Info("error update one book in updatebook.go")
+		a.SLogger.Info("error update one book in updatebook.go")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

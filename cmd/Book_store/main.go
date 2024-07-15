@@ -13,15 +13,15 @@ import (
 // логер
 
 func main() {
-	logger.InitLogger()
-	defer logger.SugarLogger.Sync()
+	sLogger := logger.InitLogger()
+	defer sLogger.Sync()
 
 	db, err := sqlx.Connect("postgres", "host=localhost port=5432 user=postgres password=1234 dbname=test_books sslmode=disable")
 	if err != nil {
-		logger.SugarLogger.Fatal("not connected to db")
 		fmt.Println("not connected to db")
+		sLogger.Fatal("not connected to db")
 	}
-	storage := books.New(db, logger.SugarLogger)
-	server.ServerStart(storage)
+	storage := books.New(db, sLogger)
+	server.ServerStart(storage, sLogger)
 
 }

@@ -2,7 +2,6 @@ package books
 
 import (
 	"context"
-	"github.com/PlegunovN/Book_store/internal/logger"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
@@ -17,7 +16,7 @@ func (s client) insert(ctx context.Context, book Book, author Author) error {
 	defer func() {
 		if err != nil {
 			tx.Rollback()
-			logger.SugarLogger.Info("Create error - rollback")
+			s.logger.Info("Create error - rollback")
 		}
 		tx.Commit()
 	}()
@@ -57,7 +56,7 @@ func (s client) UpdateBookAndAuthor(ctx context.Context, title string, id int64,
 	defer func() {
 		if err != nil {
 			tx.Rollback()
-			logger.SugarLogger.Info("update error - rollback ")
+			s.logger.Info("update error - rollback ")
 			return
 		}
 		tx.Commit()
@@ -142,7 +141,7 @@ func (s client) DeleteBook(ctx context.Context, id int64) error {
 	defer func() {
 		if err != nil {
 			tx.Rollback()
-			logger.SugarLogger.Info("Delete error - rollback")
+			s.logger.Info("Delete error - rollback")
 		}
 		tx.Commit()
 	}()

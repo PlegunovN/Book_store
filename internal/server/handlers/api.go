@@ -8,6 +8,7 @@ import (
 
 type Api struct {
 	Storage *books.Service
+	SLogger *zap.SugaredLogger
 }
 
 func New(db *sqlx.DB, logger *zap.SugaredLogger) *Api {

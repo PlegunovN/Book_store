@@ -6,8 +6,6 @@ import (
 	"os"
 )
 
-var SugarLogger *zap.SugaredLogger
-
 func getEncoder() zapcore.Encoder {
 	return zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
 }
@@ -17,11 +15,11 @@ func getLogWriter() zapcore.WriteSyncer {
 	return zapcore.AddSync(file)
 }
 
-func InitLogger() *zap.Logger {
+func InitLogger() *zap.SugaredLogger {
 	writerSyncer := getLogWriter()
 	encoder := getEncoder()
 	core := zapcore.NewCore(encoder, writerSyncer, zapcore.DebugLevel)
 	logger := zap.New(core)
-	SugarLogger = logger.Sugar()
-	return logger
+	sugarLogger := logger.Sugar()
+	return sugarLogger
 }
