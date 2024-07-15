@@ -1,8 +1,8 @@
 package configs
 
 import (
+	"fmt"
 	"github.com/spf13/viper"
-	"log"
 )
 
 type Postgres struct {
@@ -25,13 +25,13 @@ func LoadConfig(path string) (cfg *Postgres, err error) {
 
 	err = viper.ReadInConfig()
 	if err != nil {
-		log.Println("Read config error")
+		fmt.Errorf("Read config error %w", err)
 		return
 	}
 
 	err = viper.Unmarshal(cfg)
 	if err != nil {
-		log.Println("Unmarshal config error")
+		fmt.Errorf("Unmarshal config error %w", err)
 		return
 	}
 
