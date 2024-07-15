@@ -3,6 +3,7 @@ package books
 import (
 	"context"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
 )
 
 type Service struct {
@@ -10,10 +11,11 @@ type Service struct {
 }
 
 // New функция инициальзирует объект , работающий с бд (вид функций -creator)
-func New(db *sqlx.DB) *Service {
+func New(db *sqlx.DB, logger *zap.SugaredLogger) *Service {
 	return &Service{
 		client: &client{
-			db: db,
+			db:     db,
+			logger: logger,
 		},
 	}
 }

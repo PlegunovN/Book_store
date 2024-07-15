@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"Book_store/internal"
+	"Book_store/internal/logger"
 	"context"
 	"encoding/json"
 	"github.com/gorilla/mux"
@@ -24,27 +24,27 @@ func (a Api) GetBook(w http.ResponseWriter, r *http.Request) {
 
 	if id == 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		internal.SugarLogger.Info("error, not ID")
+		logger.SugarLogger.Info("error, not ID")
 		return
 	}
 
 	book, err := a.Storage.SelectBook(ctx, id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		internal.SugarLogger.Info("error select book")
+		logger.SugarLogger.Info("error select book")
 		return
 	}
 
 	if book == nil {
 		w.WriteHeader(http.StatusNotFound)
-		internal.SugarLogger.Info("error, Book Not Found")
+		logger.SugarLogger.Info("error, Book Not Found")
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(book)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		internal.SugarLogger.Info("error Encode author in getbook.go")
+		logger.SugarLogger.Info("error Encode author in getbook.go")
 		return
 	}
 	w.WriteHeader(http.StatusOK)

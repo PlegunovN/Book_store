@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"Book_store/internal"
+	"Book_store/internal/logger"
 	"context"
 	"encoding/json"
 	"net/http"
@@ -20,32 +20,32 @@ func (a Api) UpdateAuthor(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		internal.SugarLogger.Info("error decode update one author in updateauthor.go")
+		logger.SugarLogger.Info("error decode update one author in updateauthor.go")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	if req.ID == 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		internal.SugarLogger.Info("error, not id in request")
+		logger.SugarLogger.Info("error, not id in request")
 		return
 	}
 
 	if req.Firstname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		internal.SugarLogger.Info("error, not first name in request")
+		logger.SugarLogger.Info("error, not first name in request")
 		return
 	}
 
 	if req.Lastname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		internal.SugarLogger.Info("error, not last name in request")
+		logger.SugarLogger.Info("error, not last name in request")
 		return
 	}
 
 	err = a.Storage.UpdateAuthor(ctx, req.Firstname, req.Lastname, req.ID)
 	if err != nil {
-		internal.SugarLogger.Info("error update one author in updateauthor.go")
+		logger.SugarLogger.Info("error update one author in updateauthor.go")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

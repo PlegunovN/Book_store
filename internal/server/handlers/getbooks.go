@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"Book_store/internal"
+	"Book_store/internal/logger"
 	"encoding/json"
 	"net/http"
 )
@@ -13,34 +13,34 @@ func (a Api) GetBooks(w http.ResponseWriter, r *http.Request) {
 	limit := r.URL.Query().Get("limit")
 	if limit == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		internal.SugarLogger.Info("400", "error, not limit in request")
+		logger.SugarLogger.Info("400", "error, not limit in request")
 		return
 	}
 
 	offset := r.URL.Query().Get("offset")
 	if offset == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		internal.SugarLogger.Info("error, not offset in request")
+		logger.SugarLogger.Info("error, not offset in request")
 		return
 	}
 
 	books, err := a.Storage.SelectBooks(ctx, limit, offset)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		internal.SugarLogger.Info("error select books")
+		logger.SugarLogger.Info("error select books")
 		return
 	}
 
 	if books == nil {
 		w.WriteHeader(http.StatusNotFound)
-		internal.SugarLogger.Info("error, books Not Found")
+		logger.SugarLogger.Info("error, books Not Found")
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(books)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		internal.SugarLogger.Info("error Encode books in getbooks.go")
+		logger.SugarLogger.Info("error Encode books in getbooks.go")
 		return
 	}
 	w.WriteHeader(http.StatusOK)

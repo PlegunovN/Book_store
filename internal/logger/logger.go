@@ -1,4 +1,4 @@
-package internal
+package logger
 
 import (
 	"go.uber.org/zap"
@@ -17,11 +17,11 @@ func getLogWriter() zapcore.WriteSyncer {
 	return zapcore.AddSync(file)
 }
 
-func InitLogger() {
+func InitLogger() *zap.Logger {
 	writerSyncer := getLogWriter()
 	encoder := getEncoder()
 	core := zapcore.NewCore(encoder, writerSyncer, zapcore.DebugLevel)
-	Logger := zap.New(core)
-	SugarLogger = Logger.Sugar()
-
+	logger := zap.New(core)
+	SugarLogger = logger.Sugar()
+	return logger
 }

@@ -1,1 +1,2 @@
-{"level":"info","ts":1720204518.5334957,"msg":"hi logger"}
+{"level":"info","ts":1721036472.5189438,"msg":"hi logger"}
+{"level":"info","ts":1721036523.8216038,"msg":"error, not BookTitle in request"}

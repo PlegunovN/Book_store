@@ -1,8 +1,8 @@
 package server
 
 import (
-	"Book_store/internal"
 	"Book_store/internal/books"
+	"Book_store/internal/logger"
 	"Book_store/internal/server/handlers"
 	"fmt"
 	"github.com/gorilla/mux"
@@ -16,7 +16,7 @@ func ServerStart(storage *books.Service) {
 
 	r := mux.NewRouter()
 	fmt.Println("server start at 8080")
-	internal.SugarLogger.Info("hi logger")
+	logger.SugarLogger.Info("hi logger")
 
 	r.HandleFunc("/books", api.GetBooks).Methods("GET")
 	r.HandleFunc("/book/{id}", api.GetBook).Methods("GET")
