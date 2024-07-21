@@ -11,8 +11,8 @@ func (a Api) DeleteBook(w http.ResponseWriter, r *http.Request) {
 
 	idB, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
-		a.SLogger.Info("error mux.Vars book in delete.go")
 		w.WriteHeader(http.StatusInternalServerError)
+		a.SLogger.Errorln("error mux.Vars book in delete.go")
 		return
 	}
 
@@ -21,14 +21,13 @@ func (a Api) DeleteBook(w http.ResponseWriter, r *http.Request) {
 
 	if id == 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		a.SLogger.Info("error, not ID in request")
 		return
 	}
 
 	err = a.Storage.DeleteBook(ctx, id)
 	if err != nil {
-		a.SLogger.Info("error Encode id in delete.go")
 		w.WriteHeader(http.StatusInternalServerError)
+		a.SLogger.Errorln("error Encode id in delete.go")
 		return
 	}
 	w.WriteHeader(http.StatusOK)

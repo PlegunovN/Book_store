@@ -23,32 +23,29 @@ func (a Api) CreateBook(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Info("error in decoder, create.go")
+		a.SLogger.Errorln("error in decoder, create.go")
 		return
 	}
 
 	if req.Title == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		a.SLogger.Info("error, not BookTitle in request")
 		return
 	}
 
 	if req.Author.Firstname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		a.SLogger.Info("error, not Fist name in request")
 		return
 	}
 
 	if req.Author.Lastname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		a.SLogger.Info("error, not Last name in request")
 		return
 	}
 
 	err = a.Storage.Insert(ctx, req.Title, req.Author.Firstname, req.Author.Lastname)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Info("err in create.go")
+		a.SLogger.Errorln("err in create.go")
 		return
 	}
 

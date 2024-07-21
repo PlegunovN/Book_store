@@ -6,7 +6,6 @@ import (
 	"github.com/PlegunovN/Book_store/internal/server/handlers"
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
-	"log"
 	"net/http"
 )
 
@@ -28,5 +27,5 @@ func ServerStart(storage *books.Service, sLogger *zap.SugaredLogger) {
 	r.HandleFunc("/update/author", api.UpdateAuthor).Methods("PUT")
 	r.HandleFunc("/book/{id}", api.DeleteBook).Methods("DELETE")
 	err := http.ListenAndServe(":8080", r)
-	log.Fatal(err)
+	sLogger.Fatal(err)
 }

@@ -19,32 +19,29 @@ func (a Api) UpdateAuthor(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		a.SLogger.Info("error decode update one author in updateauthor.go")
 		w.WriteHeader(http.StatusInternalServerError)
+		a.SLogger.Errorln("error decode update one author in updateauthor.go")
 		return
 	}
 
 	if req.ID == 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		a.SLogger.Info("error, not id in request")
 		return
 	}
 
 	if req.Firstname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		a.SLogger.Info("error, not first name in request")
 		return
 	}
 
 	if req.Lastname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		a.SLogger.Info("error, not last name in request")
 		return
 	}
 
 	err = a.Storage.UpdateAuthor(ctx, req.Firstname, req.Lastname, req.ID)
 	if err != nil {
-		a.SLogger.Info("error update one author in updateauthor.go")
+		a.SLogger.Errorln("error update one author in updateauthor.go")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
