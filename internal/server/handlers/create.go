@@ -23,7 +23,7 @@ func (a Api) CreateBook(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorln("error in decoder, create.go")
+		a.SLogger.Errorf("error in decoder, create.go: %w", err)
 		return
 	}
 
@@ -45,7 +45,7 @@ func (a Api) CreateBook(w http.ResponseWriter, r *http.Request) {
 	err = a.Storage.Insert(ctx, req.Title, req.Author.Firstname, req.Author.Lastname)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorln("err in create.go")
+		a.SLogger.Errorf("err in create.go: %w", err)
 		return
 	}
 

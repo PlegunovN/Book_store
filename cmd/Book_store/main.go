@@ -17,7 +17,7 @@ func main() {
 
 	db, err := sqlx.Connect("postgres", "host=localhost port=5432 user=postgres password=1234 dbname=test_books sslmode=disable")
 	if err != nil {
-		sLogger.Fatal("not connected to db")
+		sLogger.Fatalf("not connected to db: %w", err)
 	}
 	storage := books.New(db, sLogger)
 	server.ServerStart(storage, sLogger)

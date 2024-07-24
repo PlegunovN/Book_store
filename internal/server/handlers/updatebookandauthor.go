@@ -20,7 +20,7 @@ func (a Api) UpdateBookandAuthor(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorln("error decode update book&author in updatebookandauthor.go")
+		a.SLogger.Errorf("error decode update book&author in updatebookandauthor.go: %w", err)
 		return
 	}
 
@@ -47,7 +47,7 @@ func (a Api) UpdateBookandAuthor(w http.ResponseWriter, r *http.Request) {
 	err = a.Storage.UpdateBookAndAuthor(ctx, req.Title, req.ID, req.Firstname, req.Lastname)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorln("error update book&author in updatebookandauthor.go")
+		a.SLogger.Errorf("error update book&author in updatebookandauthor.go: %w", err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

@@ -20,7 +20,7 @@ func (a Api) UpdateAuthor(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorln("error decode update one author in updateauthor.go")
+		a.SLogger.Errorf("error decode update one author in updateauthor.go: %w", err)
 		return
 	}
 
@@ -41,7 +41,7 @@ func (a Api) UpdateAuthor(w http.ResponseWriter, r *http.Request) {
 
 	err = a.Storage.UpdateAuthor(ctx, req.Firstname, req.Lastname, req.ID)
 	if err != nil {
-		a.SLogger.Errorln("error update one author in updateauthor.go")
+		a.SLogger.Errorf("error update one author in updateauthor.go: %w", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

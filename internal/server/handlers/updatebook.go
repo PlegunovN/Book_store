@@ -19,7 +19,7 @@ func (a Api) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorln("error decode update one book in updatebook.go")
+		a.SLogger.Errorf("error decode update one book in updatebook.go: %w", err)
 		return
 	}
 
@@ -36,7 +36,7 @@ func (a Api) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	err = a.Storage.UpdateBook(ctx, req.Title, req.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorln("error update one book in updatebook.go")
+		a.SLogger.Errorf("error update one book in updatebook.go: %w", err)
 		return
 	}
 

@@ -12,7 +12,7 @@ func (a Api) GetAuthor(w http.ResponseWriter, r *http.Request) {
 	idStr, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorln("error mux.Vars book in getauthor.go")
+		a.SLogger.Errorf("error mux.Vars book in getauthor.go: %w", err)
 		return
 	}
 	ctx := r.Context()
@@ -26,7 +26,7 @@ func (a Api) GetAuthor(w http.ResponseWriter, r *http.Request) {
 	author, err := a.Storage.SelectAuthor(ctx, id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorln("error select author")
+		a.SLogger.Errorf("error select author: %w", err)
 		return
 	}
 	if author == nil {
@@ -37,7 +37,7 @@ func (a Api) GetAuthor(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(author)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorln("error Encode author in getauthor.go")
+		a.SLogger.Errorf("error Encode author in getauthor.go: %w", err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
