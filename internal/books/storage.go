@@ -17,6 +17,7 @@ func (s client) insert(ctx context.Context, book Book, author Author) error {
 		if err != nil {
 			tx.Rollback()
 			s.logger.Errorf("Create book error - rollback: %w", err)
+			return
 		}
 		tx.Commit()
 		return
@@ -146,6 +147,7 @@ func (s client) DeleteBook(ctx context.Context, id int64) error {
 		if err != nil {
 			tx.Rollback()
 			s.logger.Errorf("Delete book error - rollback: %w", err)
+			return
 		}
 		tx.Commit()
 		return
