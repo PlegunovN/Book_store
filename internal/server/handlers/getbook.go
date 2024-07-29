@@ -13,7 +13,7 @@ func (a Api) GetBook(w http.ResponseWriter, r *http.Request) {
 	idStr, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorf("error mux.Vars book in getbook.go: %w", err)
+		a.logger.Errorf("error mux.Vars : %w", err)
 		return
 	}
 
@@ -25,10 +25,10 @@ func (a Api) GetBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	book, err := a.Storage.SelectBook(ctx, id)
+	book, err := a.storage.SelectBook(ctx, id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorf("error select book: %w", err)
+		a.logger.Errorf("error select book: %w", err)
 		return
 	}
 
@@ -40,7 +40,7 @@ func (a Api) GetBook(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(book)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorf("error Encode author in getbook.go: %w", err)
+		a.logger.Errorf("error encoder: %w", err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

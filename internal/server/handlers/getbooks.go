@@ -21,10 +21,10 @@ func (a Api) GetBooks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	books, err := a.Storage.SelectBooks(ctx, limit, offset)
+	books, err := a.storage.SelectBooks(ctx, limit, offset)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorf("error select books: %w", err)
+		a.logger.Errorf("error select books: %w", err)
 		return
 	}
 
@@ -36,7 +36,7 @@ func (a Api) GetBooks(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(books)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		a.SLogger.Errorf("error Encode books in getbooks.go: %w", err)
+		a.logger.Errorf("error encoder: %w", err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

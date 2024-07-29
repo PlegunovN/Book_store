@@ -2,17 +2,17 @@ package handlers
 
 import (
 	"github.com/PlegunovN/Book_store/internal/books"
-	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
 
 type Api struct {
-	Storage *books.Service
-	SLogger *zap.SugaredLogger
+	storage *books.Service
+	logger  *zap.SugaredLogger
 }
 
-func New(db *sqlx.DB, logger *zap.SugaredLogger) *Api {
+func New(storage *books.Service, logger *zap.SugaredLogger) *Api {
 	return &Api{
-		Storage: books.New(db, logger),
+		storage: storage,
+		logger:  logger,
 	}
 }

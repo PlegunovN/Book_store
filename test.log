@@ -1,2 +1,1 @@
-{"level":"info","ts":1721055855.849413,"msg":"hi logger"}
-{"level":"info","ts":1721055863.8089135,"msg":"error, not BookTitle in request"}
+{"level":"fatal","ts":1722260272.301839,"msg":"not connected to db: %!w(*net.OpError=&{dial tcp <nil> 0xc0000a3470 0xc0000d8ba0})"}

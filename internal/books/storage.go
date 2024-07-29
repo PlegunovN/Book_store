@@ -19,6 +19,7 @@ func (s client) insert(ctx context.Context, book Book, author Author) error {
 			s.logger.Errorf("Create book error - rollback: %w", err)
 		}
 		tx.Commit()
+		return
 	}()
 
 	query := "INSERT INTO author(firstname, lastname) VALUES ($1, $2)"
@@ -46,7 +47,9 @@ func (s client) insert(ctx context.Context, book Book, author Author) error {
 
 	query = "INSERT INTO bookauthor(author_id, book_id) VALUES ($1, $2)"
 	_, err = tx.ExecContext(ctx, query, a.ID, b.ID)
-
+	if err != nil {
+		return err
+	}
 	return err
 }
 
@@ -60,6 +63,7 @@ func (s client) UpdateBookAndAuthor(ctx context.Context, title string, id int64,
 			return
 		}
 		tx.Commit()
+		return
 	}()
 
 	_, err = tx.ExecContext(ctx, "UPDATE book SET title = $1 WHERE id = $2", title, id)
@@ -144,6 +148,7 @@ func (s client) DeleteBook(ctx context.Context, id int64) error {
 			s.logger.Errorf("Delete book error - rollback: %w", err)
 		}
 		tx.Commit()
+		return
 	}()
 	query := "DELETE FROM bookauthor WHERE book_id = $1"
 	_, err = tx.ExecContext(ctx, query, id)
