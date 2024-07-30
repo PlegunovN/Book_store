@@ -1,13 +1,10 @@
 package main
 
 import (
-	"Book_store/configs"
 	"Book_store/internal/books"
 	"Book_store/internal/server"
-	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"log"
 )
 
 // авторизация
@@ -20,11 +17,15 @@ func main() {
 		log.Fatal(err)
 	}
 
+
+	sLogger := logger.InitLogger()
+	defer sLogger.Sync()
+
 	db, err := sqlx.Connect("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DbName, cfg.SslMode))
 	if err != nil {
-		log.Fatal("not connected to db")
+		sLogger.Fatalf("not connected to db: %w", err)
 	}
-	storage := books.New(db)
-	server.ServerStart(storage)
-	//defer db.Close()
+	storage := books.New(db, sLogger)
+	server.ServerStart(storage, sLogger)
+
 }

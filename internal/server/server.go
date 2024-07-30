@@ -1,21 +1,23 @@
 package server
 
 import (
-	"Book_store/internal/books"
-	"Book_store/internal/server/handlers"
 	"fmt"
-	"log"
-	"net/http"
-
+	"github.com/PlegunovN/Book_store/internal/books"
+	"github.com/PlegunovN/Book_store/internal/server/handlers"
 	"github.com/gorilla/mux"
+	"go.uber.org/zap"
+	"net/http"
 )
 
-func ServerStart(storage *books.Service) {
+func ServerStart(storage *books.Service, logger *zap.SugaredLogger) {
 
-	api := handlers.Api{Storage: storage}
+	//api := handlers.Api{Storage: storage,
+	//	SLogger: sLogger}
+	api := handlers.New(storage, logger)
 
 	r := mux.NewRouter()
 	fmt.Println("server start at 8080")
+
 	r.HandleFunc("/books", api.GetBooks).Methods("GET")
 	r.HandleFunc("/book/{id}", api.GetBook).Methods("GET")
 	r.HandleFunc("/author/{id}", api.GetAuthor).Methods("Get")
@@ -25,5 +27,5 @@ func ServerStart(storage *books.Service) {
 	r.HandleFunc("/update/author", api.UpdateAuthor).Methods("PUT")
 	r.HandleFunc("/book/{id}", api.DeleteBook).Methods("DELETE")
 	err := http.ListenAndServe(":8080", r)
-	log.Fatal(err)
+	logger.Fatal(err)
 }

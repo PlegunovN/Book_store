@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -14,7 +13,7 @@ func (a Api) GetBook(w http.ResponseWriter, r *http.Request) {
 	idStr, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("error mux.Vars book in getbook.go")
+		a.logger.Errorf("error mux.Vars : %w", err)
 		return
 	}
 
@@ -23,27 +22,25 @@ func (a Api) GetBook(w http.ResponseWriter, r *http.Request) {
 
 	if id == 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not ID")
 		return
 	}
 
-	book, err := a.Storage.SelectBook(ctx, id)
+	book, err := a.storage.SelectBook(ctx, id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("error select book")
+		a.logger.Errorf("error select book: %w", err)
 		return
 	}
 
 	if book == nil {
 		w.WriteHeader(http.StatusNotFound)
-		log.Println("error, Book Not Found")
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(book)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("error Encode author in getbook.go")
+		a.logger.Errorf("error encoder: %w", err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

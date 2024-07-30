@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -20,32 +19,29 @@ func (a Api) UpdateAuthor(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		log.Println("error decode update one author in updateauthor.go")
 		w.WriteHeader(http.StatusInternalServerError)
+		a.logger.Errorf("error decode update one author: %w", err)
 		return
 	}
 
 	if req.ID == 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not id in request")
 		return
 	}
 
 	if req.Firstname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not first name in request")
 		return
 	}
 
 	if req.Lastname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not last name in request")
 		return
 	}
 
-	err = a.Storage.UpdateAuthor(ctx, req.Firstname, req.Lastname, req.ID)
+	err = a.storage.UpdateAuthor(ctx, req.Firstname, req.Lastname, req.ID)
 	if err != nil {
-		log.Println("error update one author in updateauthor.go")
+		a.logger.Errorf("error update one author: %w", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

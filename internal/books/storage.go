@@ -3,11 +3,12 @@ package books
 import (
 	"context"
 	"github.com/jmoiron/sqlx"
-	"log"
+	"go.uber.org/zap"
 )
 
 type client struct {
-	db *sqlx.DB
+	db     *sqlx.DB
+	logger *zap.SugaredLogger
 }
 
 func (s client) insert(ctx context.Context, book Book, author Author) error {
@@ -15,9 +16,11 @@ func (s client) insert(ctx context.Context, book Book, author Author) error {
 	defer func() {
 		if err != nil {
 			tx.Rollback()
-			log.Println("Create error - rollback")
+			s.logger.Errorf("Create book error - rollback: %w", err)
+			return
 		}
 		tx.Commit()
+		return
 	}()
 
 	query := "INSERT INTO author(firstname, lastname) VALUES ($1, $2)"
@@ -45,7 +48,9 @@ func (s client) insert(ctx context.Context, book Book, author Author) error {
 
 	query = "INSERT INTO bookauthor(author_id, book_id) VALUES ($1, $2)"
 	_, err = tx.ExecContext(ctx, query, a.ID, b.ID)
-
+	if err != nil {
+		return err
+	}
 	return err
 }
 
@@ -55,10 +60,11 @@ func (s client) UpdateBookAndAuthor(ctx context.Context, title string, id int64,
 	defer func() {
 		if err != nil {
 			tx.Rollback()
-			log.Println("update error - rollback ")
+			s.logger.Errorf("update book and author error - rollback : %w", err)
 			return
 		}
 		tx.Commit()
+		return
 	}()
 
 	_, err = tx.ExecContext(ctx, "UPDATE book SET title = $1 WHERE id = $2", title, id)
@@ -101,9 +107,9 @@ func (s client) UpdateAuthor(ctx context.Context, firstname, lastname string, id
 }
 
 func (s client) GetBooks(ctx context.Context, limit, offset string) ([]BookAuthor, error) {
-	query := `"SELECT book.id, book.title, author.id , author.firstname, author.lastname 
-		FROM book INNER JOIN bookAuthor ON book.id = bookAuthor.book_id 
-		INNER JOIN author ON bookAuthor.author_id = author.id  ORDER BY book.id LIMIT $1 OFFSET $2"`
+	query := "SELECT book.id, book.title, author.id , author.firstname, author.lastname" +
+		"FROM book INNER JOIN bookAuthor ON book.id = bookAuthor.book_id" +
+		"INNER JOIN author ON bookAuthor.author_id = author.id  ORDER BY book.id LIMIT $1 OFFSET $2"
 
 	books := make([]BookAuthor, 1)
 	err := s.db.SelectContext(ctx, &books, query, limit, offset)
@@ -114,9 +120,9 @@ func (s client) GetBooks(ctx context.Context, limit, offset string) ([]BookAutho
 }
 
 func (s client) GetBook(ctx context.Context, id int64) (*BookAuthor, error) {
-	query := `"SELECT book.id, book.title , author.id, author.firstname, author.lastname
-		FROM book INNER JOIN bookAuthor ON book.id = bookAuthor.book_id 
-		INNER JOIN author ON bookAuthor.author_id = author.id where book.id=$1"`
+	query := "SELECT book.id, book.title , author.id, author.firstname, author.lastname" +
+		"FROM book INNER JOIN bookAuthor ON book.id = bookAuthor.book_id " +
+		"INNER JOIN author ON bookAuthor.author_id = author.id where book.id=$1"
 	res := &BookAuthor{}
 	err := s.db.GetContext(ctx, res, query, id)
 	if err != nil {
@@ -140,9 +146,11 @@ func (s client) DeleteBook(ctx context.Context, id int64) error {
 	defer func() {
 		if err != nil {
 			tx.Rollback()
-			log.Println("Delete error - rollback")
+			s.logger.Errorf("Delete book error - rollback: %w", err)
+			return
 		}
 		tx.Commit()
+		return
 	}()
 	query := "DELETE FROM bookauthor WHERE book_id = $1"
 	_, err = tx.ExecContext(ctx, query, id)

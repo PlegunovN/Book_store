@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -24,32 +23,29 @@ func (a Api) CreateBook(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("error in decoder, create.go")
+		a.logger.Errorf("error in decoder: %w", err)
 		return
 	}
 
 	if req.Title == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not BookTitle in request")
 		return
 	}
 
 	if req.Author.Firstname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not Fist name in request")
 		return
 	}
 
 	if req.Author.Lastname == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not Last name in request")
 		return
 	}
 
-	err = a.Storage.Insert(ctx, req.Title, req.Author.Firstname, req.Author.Lastname)
+	err = a.storage.Insert(ctx, req.Title, req.Author.Firstname, req.Author.Lastname)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("err in create.go")
+		a.logger.Errorf("err encoder: %w", err)
 		return
 	}
 

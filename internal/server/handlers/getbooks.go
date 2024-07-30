@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -13,34 +12,31 @@ func (a Api) GetBooks(w http.ResponseWriter, r *http.Request) {
 	limit := r.URL.Query().Get("limit")
 	if limit == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not limit in request")
 		return
 	}
 
 	offset := r.URL.Query().Get("offset")
 	if offset == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Println("error, not offset in request")
 		return
 	}
 
-	books, err := a.Storage.SelectBooks(ctx, limit, offset)
+	books, err := a.storage.SelectBooks(ctx, limit, offset)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("error select books")
+		a.logger.Errorf("error select books: %w", err)
 		return
 	}
 
 	if books == nil {
 		w.WriteHeader(http.StatusNotFound)
-		log.Println("error, books Not Found")
 		return
 	}
 
 	err = json.NewEncoder(w).Encode(books)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("error Encode books in getbooks.go")
+		a.logger.Errorf("error encoder: %w", err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
